@@ -1,0 +1,13 @@
+# Local memory scaffold (test/example content)
+memories/
+
+# OS junk
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
