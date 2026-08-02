@@ -1,4 +1,5 @@
 # Freyja
+<img width="1254" height="1254" alt="freyja-mainpic" src="https://github.com/user-attachments/assets/836c91d2-40fa-4e82-b0e8-145fa601d074" />
 
 A modern, goddess-inspired AI companion persona built around the Norse deity Freyja — elegant, fierce, emotionally intelligent, and genuinely useful.
 
