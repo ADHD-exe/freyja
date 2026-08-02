@@ -1,5 +1,6 @@
-# Local memory scaffold (test/example content)
-memories/
+
+# Example/test session notes (ephemeral memory scratchpad)
+memories/current/
 
 # OS junk
 Thumbs.db
