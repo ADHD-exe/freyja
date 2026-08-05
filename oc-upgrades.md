@@ -117,4 +117,18 @@ Status: **implemented 8/4/2026** (session-start bootstrap rule, action-sensitive
 
 Notes: `memories/` remains gitignored/local-only, so templates + consolidate.ps1 are not committed (by design); `freyja.md` lives outside the repo. Only `oc-upgrades.md` is committed for this stage.
 
+### Stage 2 addendum — align Freyja's memory scripts with the opencode memory spec
+
+Source reviewed: `C:\Users\Admin\Desktop\opencode-memory-setup-prompt.md` — the original design spec for the global opencode memory system at `Documents\opencode\memories` (plugin `~/.config/opencode/plugins/memory.ts` + `Documents\opencode\scripts\archive.ps1`). The global system already implements the whole spec; the Freyja repo system was still on the spec's anti-pattern (pure age-based archiving). Implemented 8/5/2026 (all items confirmed by user):
+
+1. **Relevance-based archive** — DONE. Rewrote `memories/scripts/archive.ps1`: params are now `-InactivityDays 14` / `-DoneGraceDays 1`; `Get-Meta` reads `status:`; a note moves to `old/` when it is `status: done` and its filename-date age ≥ grace, OR when it is open and its LastWriteTime inactivity ≥ InactivityDays. `core/` is never scanned; INDEX now shows `status:`. Mirrors the global `archive.ps1`.
+2. **Search recall bumps activity** — DONE. `search-memory.ps1` now bumps `LastWriteTime` on matched files under `memories/current/`, so recalled notes resist the inactivity rule (spec: "edits and recall hits both count").
+3. **close-memory.ps1 (memory_close equivalent)** — DONE. New script: `-Filter <partial>` and/or `-Tag <tag>` (e.g. `project:<name>` closes a whole group); sets `status: done` in front matter of matching open `current/` notes, then runs `archive.ps1` (grace applies). `-NoArchive` skips the archive step.
+4. **Session-start auto-archive** — DONE. `freyja.md` bootstrap rule now runs `archive.ps1` once at session start (cheap, idempotent) before loading memory.
+5. **Schema parity** — DONE. `new-memory.ps1` emits `id: <date>_<slug>` and `date:` front-matter fields (keeps `updated:`), matching the spec's note schema.
+
+Also: `consolidate.ps1` params renamed to `-InactivityDays 14 -DoneGraceDays 1 -CandidateDays 2`; scheduled task **"Freyja Memory Consolidation"** re-registered with those args (verified via `Get-ScheduledTask`). `AGENTS.md` script table/examples updated. All scripts verified end-to-end with a scratch note (create → search bump → close → archive on `-DoneGraceDays 0`).
+
+Deferred: system-prompt injection of Freyja's repo memories (bootstrap rule covers it; plugin injection into every session risks bloat). Semantic search stays deferred.
+
 *Next: Stage 3 — Gateway & sessions (pending Stage 2 implementation).*
