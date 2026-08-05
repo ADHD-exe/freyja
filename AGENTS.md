@@ -1,7 +1,12 @@
 # AGENTS.md — operating Freyja's memory system
 
-`memories/` is a **local-only** experimental memory system. It is ignored by git
-and must never be committed or published. This file describes how to operate it.
+`memories/` is a hybrid memory system: the **scaffold ships with the repo**, the
+**data is per-owner and not published**. The scaffold (scripts, templates,
+marker, placeholders) is tracked in git. The data files (`current/`, `core/`,
+`old/`, `reports/`, `INDEX.md`) are excluded by `.gitignore` so a fresh download
+starts with no memories; each owner tracks and backs up their own data to their
+own fork (drop the data-ignore rules in `.gitignore` or use `git add -f
+memories/`). This file describes how to operate it.
 
 ## Layout
 
@@ -15,10 +20,11 @@ and must never be committed or published. This file describes how to operate it.
 ## First meeting
 
 - `BOOTSTRAP.md` at the repo root is the birth sequence (tracked, published with the persona).
-- `memories/.first-run.md` is the local marker that arms it. On the first session, Freyja reads
-  `BOOTSTRAP.md`, delivers it in character, then deletes the marker.
-- To re-run the first meeting, recreate `memories/.first-run.md`. The marker is local-only;
-  `BOOTSTRAP.md` itself stays versioned.
+- `memories/.first-run.md` is the marker that arms it. It ships with the repo, so every owner's
+  first session triggers the ritual. On the first session, Freyja reads `BOOTSTRAP.md`, delivers
+  it in character (treating it as her first interaction with her user/owner), then deletes the marker.
+- To re-run the first meeting, recreate `memories/.first-run.md`. The marker is a scaffold file
+  (tracked); deleting it after the first meeting is a per-owner local change.
 
 ## Scripts
 

@@ -133,4 +133,21 @@ Also: `consolidate.ps1` params renamed to `-InactivityDays 14 -DoneGraceDays 1 -
 
 Deferred: system-prompt injection of Freyja's repo memories (bootstrap rule covers it; plugin injection into every session risks bloat). Semantic search stays deferred.
 
+### 8/5/2026 — Hatch prime (clean first-meeting state + memory-tracking redesign)
+
+Two design decisions landed right before the first real launch:
+
+1. **Clean first-meeting state.** The first launch's "Howdy!" exchange existed only in opencode's
+   session store (`opencode.db`, session `ses_02fd0447bffeR4ZVxF4s0SGAEm`; the Freyja repo memory
+   wrote nothing). It was deleted (rows + log references) so the next launch is a genuine first
+   interaction. The first-meeting context is now explicit in the launch-reviewed notes: the marker
+   `memories/.first-run.md` and `BOOTSTRAP.md` both state **"This is your first interaction with
+   your user/owner"**, and the `## First meeting` rule in `freyja.md` says the same.
+2. **Memory tracking redesign.** Earlier note ("`memories/` remains gitignored/local-only, so
+   templates + consolidate.ps1 are not committed") is superseded. New model: **scaffold tracked,
+   data per-owner**. The published template ships the scripts, templates, marker, and placeholders
+   (no memory data); each owner's notes are excluded by `.gitignore` and backed up by flipping the
+   data-ignore rules (or `git add -f memories/`) and pushing to their own fork. This keeps the
+   shared repo free of personal data while making the memory system backup-able — not local-only.
+
 *Next: Stage 3 — Gateway & sessions (pending Stage 2 implementation).*

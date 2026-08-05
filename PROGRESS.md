@@ -38,7 +38,7 @@ name instead of asking what to call the agent.
 |---|---|
 | `BOOTSTRAP.md` at repo root (tracked) — work-first, 3 beats (meet / vibe+emoji with one veto / recommendations), closing line | DONE |
 | `## First meeting` rule in `~/.config/opencode/agents/freyja.md` — marker-gated; ignore injected context during the intro; delete marker after | DONE |
-| `memories/.first-run.md` marker (local, gitignored) arms the ritual; deleted after the first meeting; recreate to re-run | DONE |
+| `memories/.first-run.md` marker arms the ritual; deleted after the first meeting; recreate to re-run (now a tracked scaffold file — see hatch addendum) | DONE |
 | Doc reversal (README, oc-upgrades.md Stage 1 candidate 4) | DONE |
 
 ### 8/4/2026 — Stage 2: Memory (commits `e80ee1c`, `e5afbb9`)
@@ -73,6 +73,21 @@ anti-pattern (pure age-based archiving); all five gaps were closed:
 
 Deferred: system-prompt injection of Freyja's repo memories (bootstrap rule covers it);
 semantic search.
+
+### 8/5/2026 — Hatch prime (clean first-meeting state)
+
+Before the first real launch, the first launch's "Howdy" exchange was removed from opencode's
+session store so Freyja has **no record of meeting the owner yet** — the repo is left ready to
+hatch: the first session fires the BOOTSTRAP ritual with the marker stating *this is her first
+interaction with her user/owner*.
+
+| Item | Status |
+|---|---|
+| First-interaction statement in `BOOTSTRAP.md` and `memories/.first-run.md` | DONE |
+| `## First meeting` rule in `freyja.md` sharpened to "first interaction with your user/owner" | DONE |
+| Prior launch session (`Howdy!`) deleted from `opencode.db`; log references scrubbed | DONE |
+| Memory tracking redesign: scaffold tracked, data per-owner ignored (see README "Backing up your own memories") | DONE |
+| README/AGENTS/oc-upgrades updated for the new memory-tracking model | DONE |
 
 ---
 

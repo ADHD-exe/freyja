@@ -10,5 +10,13 @@ desktop.ini
 *.swp
 *.swo
 
-# Local-only experimental memory scaffold (see README)
-memories/
+# Memory data — personal, per-owner (see README "Backing up your own memories").
+# The scaffold (scripts, templates, marker, placeholders) ships with the repo;
+# the data does not. Flip these rules (or `git add -f memories/`) to back up
+# your own memories to your own fork.
+memories/current/*
+!memories/current/.gitkeep
+memories/core/*
+memories/old/*
+memories/reports/*
+memories/INDEX.md
