@@ -63,3 +63,58 @@ Status: **implemented 8/4/2026** (all items confirmed by user).
 ---
 
 *Next: Stage 2 — Memory (memory-host-sdk, per-agent SQLite, active-memory, wiki tools, compaction/session-pruning vs our scaffold).*
+
+---
+
+## Stage 2 — Memory
+
+### OpenClaw's memory model
+
+Files + one SQLite index; no hidden state. Five tiers:
+
+| Tier | Surface | Injected |
+|---|---|---|
+| Instructions | `AGENTS.md` etc. | Always, session start (human-written only) |
+| Curated core | `MEMORY.md`, `USER.md` | Always, session start, budgeted (20k/file, 60k total, USER.md 4k) |
+| Episodic | `memory/YYYY-MM-DD.md` daily notes, transcripts | Never; searchable on demand |
+| Prospective | Standing intents (SQLite), cron jobs | Only when trigger fires |
+| Review | `DREAMS.md`, dreaming reports | Never; human review |
+
+- **Write path:** agent appends to daily notes while working; a pre-compaction "memory flush" turn saves unwritten context; **dreaming** (scheduled background sweep) consolidates through deterministic gates + a bounded model rewrite into `MEMORY.md`/`USER.md`. Provenance (owner/agent/untrusted/system) is recorded in SQLite columns at write time; cron/heartbeat/subagent sessions can never promote; recalled content is never re-extracted (recall-loop prevention).
+- **Recall lane 1 (zero model calls):** bootstrap injection of curated files (refreshes per turn), ranked `memory_search` (hybrid embeddings+keyword, 30-day recency half-life, importance multiplier), trigger-phrase auto-injection (max 3/turn, curated tier only). **Lane 2:** escalation sub-agent for temporal/multi-hop recall.
+- **User model:** `USER.md` dated imperative directives, supersede-in-place.
+- **Tools/CLI:** `memory_search`, `memory_get`, `intent`; `openclaw memory status|search|index`. Default backend is SQLite (keyword + vector + hybrid, zero deps).
+- Action-sensitive memories capture *when it is safe to act* (approval, expiry, handoff, timing), not just the fact.
+
+### Our baseline
+
+- `memories/current/` (session notes) ≈ episodic; `memories/core/` ≈ curated; `memories/old/` ≈ archive; `INDEX.md` grep index; scripts `new-memory` / `promote-memory` / `search-memory` / `archive`. Global opencode memory plugin (memory_write/memory_recall, grep-based).
+- Flow is fully manual: end-of-session note -> occasional promote to core -> archive after 7 days.
+
+### Comparison
+
+| Aspect | OpenClaw | Freyja now | Verdict |
+|---|---|---|---|
+| No hidden state | Files + SQLite index | Files only | Aligned (simpler) |
+| Tier model | Instructions/curated/episodic/prospective/review | current/core/old + templates | Aligned conceptually |
+| Curated injection | Always at session start, budgeted, refreshes per turn | Not automatic; agent must remember to read memory | **Gap — startup bootstrap rule** |
+| Recall | Hybrid semantic+keyword, recency+importance, trigger injection, escalation lane | Grep `search-memory.ps1` | Grep fine for keywords; semantic = future |
+| Write/curation | Append while working + pre-compaction flush + scheduled gated consolidation | Manual write/promote/archive | **Gap — curation unscheduled** |
+| User model | USER.md directives, supersede-in-place | Core template directives (Stage 1) | Aligned |
+| Prospective memory | Standing intents -> cron/event triggers | None | Out of scope for now |
+| Provenance/trust | Origin classes, session-kind gating, anti-poisoning | None | Low risk single-user; optional source field |
+| Action-sensitive memory | Timing/authority/expiry guidance | Not in templates | **Candidate — add to templates** |
+| Review surface | DREAMS.md + Dreams UI | Promote/archive logs | Minor |
+
+### Upgrade candidates (Stage 2)
+
+Status: **implemented 8/4/2026** (session-start bootstrap rule, action-sensitive template fields, consolidation script built — scheduling deferred per user).
+
+1. **Session-start bootstrap rule** — DONE. `freyja.md` "Your home and memory system" rules now begin with a bootstrap rule: at session start read `INDEX.md`, today's + yesterday's `current/` notes, scan `core/`, and keep it fast (never block real work). Mirrors OpenClaw lane-1 bootstrap injection.
+2. **Action-sensitive + provenance fields** — DONE. `core_memory.md`, `project_memory.md`, `task_memory.md` all gained an `## Action context (optional)` section: `Source / Owner`, `Action when`, `Expires`.
+3. **Scheduled consolidation** — PARTIAL (by design). New `memories/scripts/consolidate.ps1` runs `archive.ps1` then writes a promotion-candidate report to `memories/reports/promotion-candidates-YYYY-MM-DD.md` (DREAMS.md-style review surface) with copy-paste promote commands. Tested end-to-end. Task Scheduler registration deferred — user chose "script now, schedule later".
+4. **Defer semantic search** — CONFIRMED. Grep stays; embeddings only if recall degrades.
+
+Notes: `memories/` remains gitignored/local-only, so templates + consolidate.ps1 are not committed (by design); `freyja.md` lives outside the repo. Only `oc-upgrades.md` is committed for this stage.
+
+*Next: Stage 3 — Gateway & sessions (pending Stage 2 implementation).*
