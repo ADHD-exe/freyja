@@ -47,7 +47,7 @@ Injection is budgeted, not free: `bootstrapMaxChars` 20k/file, `bootstrapTotalMa
 | Persona layering | SOUL (voice) / AGENTS (ops) / IDENTITY (metadata) / USER (user model) / MEMORY (facts) | `Freyja.txt` = lore, `freyja.md` = voice+ops merged | We already follow the split instinct; lore vs operational. `freyja.md` could gain an identity block |
 | Injection cost | Hard caps + `/context` inspection | Prompt loads full condensed persona every session; `Freyja.txt` read on demand | OpenClaw more deterministic; fine for us, but note budgets |
 | Name/identity | User names the agent; IDENTITY.md synced to all surfaces | Fixed name; only `color`/`description` in agent frontmatter | OpenClaw ritual doesn't apply (Freyja is pre-named). But a structured identity block would help tooling |
-| First-run experience | BOOTSTRAP ritual, work-first rule | None — instant persona | Ritual itself is N/A; the *work-first principle* and "no gated intros" is a good operating rule for us |
+| First-run experience | BOOTSTRAP ritual, work-first rule | `BOOTSTRAP.md` first-meeting ritual, name pre-decided | Adopted 8/5 — see candidate 4 below |
 | User preferences | USER.md dated directives (active/superseded) | `memories/core/` free-form notes | USER.md directive discipline is a candidate to fold into memory templates |
 | Onboarding | Recommendations with "minimal vs maximum convenience" | N/A | Useful UX default if we ever add feature enablement |
 
@@ -58,7 +58,7 @@ Status: **implemented 8/4/2026** (all items confirmed by user).
 1. **Identity block** — DONE. Created `IDENTITY.md` at the freyja repo root (OpenClaw pattern: name/creature/vibe/emoji/avatar) and added an `## Identity` block to `~/.config/opencode/agents/freyja.md`. Note: identity was NOT added to the agent frontmatter — opencode forwards unknown frontmatter keys to the model provider as model options (per opencode agent docs, "Additional"), which risks breaking strict providers like Anthropic. The prompt-body block + `IDENTITY.md` achieves the same tooling-readable goal safely.
 2. **Work-first rule** — DONE. `## Work first` section added to `freyja.md` (mirrors BOOTSTRAP.md's core rule: never gate real work on intros/ritual).
 3. **Directive discipline in core template** — DONE. `memories/templates/core_memory.md` now uses dated directives (`<!-- observed: YYYY-MM-DD | status: active -->`, imperative phrasing, supersede-in-place).
-4. **Skip the naming ritual** — CONFIRMED. Freyja stays pre-formed; no name-negotiation/BOOTSTRAP flow adopted.
+4. **First-meeting ritual (BOOTSTRAP, name pre-decided)** — REVISED 8/5/2026. The initial decision was to skip the entire birth sequence (Freyja pre-formed). The first real launch proved that wrong: the session opened like a project briefing, not a first meeting. We adopted OpenClaw's BOOTSTRAP sequence with one difference — the user already chose the name, so beat 1 introduces **Freyja** by her given name instead of asking what to call the agent. `BOOTSTRAP.md` (tracked, published with the persona) holds the script; `memories/.first-run.md` (local marker) arms it and is deleted after the first meeting. See PROGRESS.md Stage 1 addendum.
 
 ---
 
@@ -113,6 +113,8 @@ Status: **implemented 8/4/2026** (session-start bootstrap rule, action-sensitive
 1. **Session-start bootstrap rule** — DONE. `freyja.md` "Your home and memory system" rules now begin with a bootstrap rule: at session start read `INDEX.md`, today's + yesterday's `current/` notes, scan `core/`, and keep it fast (never block real work). Mirrors OpenClaw lane-1 bootstrap injection.
 2. **Action-sensitive + provenance fields** — DONE. `core_memory.md`, `project_memory.md`, `task_memory.md` all gained an `## Action context (optional)` section: `Source / Owner`, `Action when`, `Expires`.
 3. **Scheduled consolidation** — DONE 8/4/2026. `memories/scripts/consolidate.ps1` runs `archive.ps1` then writes a promotion-candidate report to `memories/reports/promotion-candidates-YYYY-MM-DD.md` (DREAMS.md-style review surface) with copy-paste promote commands. Registered as Task Scheduler task **"Freyja Memory Consolidation"** — weekly Sundays 03:00, run only when user is logged on, `-ArchiveDays 7 -CandidateDays 2`, 15-min execution limit, start-if-missed. Tested on-demand (LastTaskResult 0, report generated). Uses the WindowsApps `pwsh.exe` package path because Task Scheduler can't reliably launch app-execution aliases.
+
+> NOTE (8/5): the initial registration used `-ArchiveDays 7 -CandidateDays 2`; the Stage 2 addendum below re-registered the task with `-InactivityDays 14 -DoneGraceDays 1 -CandidateDays 2`, which is the current configuration.
 4. **Defer semantic search** — CONFIRMED. Grep stays; embeddings only if recall degrades.
 
 Notes: `memories/` remains gitignored/local-only, so templates + consolidate.ps1 are not committed (by design); `freyja.md` lives outside the repo. Only `oc-upgrades.md` is committed for this stage.

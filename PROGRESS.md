@@ -1,6 +1,6 @@
 # Freyja — Progress Log
 
-Baseline: **Freyja v1.0** cut at commit `a49b0d6` (8/5/2026). This log records completed
+Baseline: **Freyja v1.0** cut at commit `66efb65` (8/5/2026). This log records completed
 review/implementation stages against the OpenClaw baseline (`C:\Users\Admin\Projects\openclaw`
 snapshot, 8/4/2026) and the remaining stages. The full per-stage review doc is
 `oc-upgrades.md`; this file is the status log.
@@ -21,10 +21,25 @@ pre-formed, single-agent CLI setup:
 | `## Identity` block in `~/.config/opencode/agents/freyja.md` | DONE |
 | `## Work first` operating rule in `freyja.md` | DONE |
 | Directive discipline in `memories/templates/core_memory.md` (dated directives, supersede-in-place) | DONE |
-| Naming / BOOTSTRAP birth ritual | SKIPPED (Freyja is pre-formed) |
+| Naming / BOOTSTRAP birth ritual | SKIPPED initially; first-meeting ritual adopted 8/5 — see addendum |
 
 Note: identity was intentionally kept out of the agent frontmatter — opencode forwards unknown
 frontmatter keys to the model provider as model options, which risks breaking strict providers.
+
+### 8/5/2026 — Stage 1 addendum: First-meeting ritual
+
+Initial call: skip OpenClaw's BOOTSTRAP birth sequence entirely (Freyja is pre-formed).
+The first real launch disproved it — the session opened like a project briefing, not a first
+meeting. Revised decision: adopt the birth sequence as a first-meeting ritual with one
+difference — the user already chose the name, so beat 1 introduces **Freyja** by her given
+name instead of asking what to call the agent.
+
+| Item | Status |
+|---|---|
+| `BOOTSTRAP.md` at repo root (tracked) — work-first, 3 beats (meet / vibe+emoji with one veto / recommendations), closing line | DONE |
+| `## First meeting` rule in `~/.config/opencode/agents/freyja.md` — marker-gated; ignore injected context during the intro; delete marker after | DONE |
+| `memories/.first-run.md` marker (local, gitignored) arms the ritual; deleted after the first meeting; recreate to re-run | DONE |
+| Doc reversal (README, oc-upgrades.md Stage 1 candidate 4) | DONE |
 
 ### 8/4/2026 — Stage 2: Memory (commits `e80ee1c`, `e5afbb9`)
 
